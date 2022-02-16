@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.te.pearsonassignement.dto.Store;
+import com.te.pearsonassignement.model.ResponseModel;
 import com.te.pearsonassignement.service.StoreServiceInterface;
 
 @RestController
@@ -19,22 +20,22 @@ public class StoreController {
 	private StoreServiceInterface service;
 	
 	@GetMapping("/getStoreById/{storeId}")
-	public ResponseEntity getStoreById(@PathVariable String storeId) {
-		Store storeById = service.getStoreById(storeId);
-		if(storeById!=null)
-			return new ResponseEntity(storeById,HttpStatus.OK);
+	public ResponseEntity<ResponseModel> getStoreById(@PathVariable String storeId) {
+		Store store = service.getStoreById(storeId);
+		if(store!=null)
+			return new ResponseEntity<>(new ResponseModel(false, "Data Found", store),HttpStatus.OK);
 		else
-			return new ResponseEntity("Data not found",HttpStatus.NOT_FOUND);
+			return new ResponseEntity<>(new ResponseModel(true, "Data not found", null),HttpStatus.NOT_FOUND);
 	}
 	
 	@GetMapping("/getStores/{condition}")
-	public ResponseEntity getStoresByCity(@PathVariable String condition) {
+	public ResponseEntity<ResponseModel> getStoresByCity(@PathVariable String condition) {
 		List<Store> storesByCity = service.getStores(condition);
 		if(storesByCity.size()>0) {
-			return new ResponseEntity(storesByCity,HttpStatus.OK);
+			return new ResponseEntity<>(new ResponseModel(false, "Data Found", storesByCity),HttpStatus.OK);
 		}
 		else {
-			return new ResponseEntity("Based on City no stores is present",HttpStatus.NOT_FOUND);
+			return new ResponseEntity<>(new  ResponseModel(true, "Data not found", null),HttpStatus.NOT_FOUND);
 		}
 	}
 

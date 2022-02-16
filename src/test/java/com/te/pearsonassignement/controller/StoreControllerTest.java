@@ -29,6 +29,7 @@ import org.springframework.web.context.WebApplicationContext;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.te.pearsonassignement.dto.Store;
+import com.te.pearsonassignement.model.ResponseModel;
 import com.te.pearsonassignement.service.StoreServiceInterface;
 //
 //@ExtendWith(MockitoExtension.class)
@@ -85,12 +86,18 @@ class StoreControllerTest {
 		store.setOpenedDate(d);
 		store.setCity("Ambarsar");
 		store.setStoreId("147");
-		when(storeServiceInterface.getStoreById(Mockito.anyString())).thenReturn(store);
-		String contentasS=	mvc.perform(get("/getStoreById/147").contentType(MediaType.APPLICATION_JSON_VALUE)
-				.content(mapper.writeValueAsString(store))).andExpect(status().isOk()).andReturn()
-				.getResponse().getContentAsString();
 
-		assertEquals(store, mapper.readValue(contentasS, Store.class));
+		ResponseModel model = new ResponseModel(false, "Data Found", mapper.writeValueAsString(store));	
+
+		when(storeServiceInterface.getStoreById(Mockito.anyString())).thenReturn(store);
+
+		String contentasS=	mvc.perform(get("/getStoreById/147").contentType(MediaType.APPLICATION_JSON_VALUE)
+				.content(mapper.writeValueAsString(store)))
+				.andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
+
+		ResponseModel responseModel=mapper.readValue(contentasS , ResponseModel.class);
+
+		assertEquals(model.getMessage(),responseModel.getMessage());
 	}
 
 
@@ -102,13 +109,17 @@ class StoreControllerTest {
 		store.setStoreId("181");
 		store.setPostCode("gfd252");
 		list.add(store);
+		
+		ResponseModel model = new ResponseModel(false, "Data Found", list);	
+
+		
 		when(storeServiceInterface.getStores(Mockito.anyString())).thenReturn(list);
 
 		String contentasS1=	mvc.perform(get("/getStores/city").contentType(MediaType.APPLICATION_JSON_VALUE)
 				.content(mapper.writeValueAsString(store))).andExpect(status().isOk()).andReturn()
 				.getResponse().getContentAsString();
 
-		assertEquals(mapper.writeValueAsString(list), contentasS1);
+		assertEquals(mapper.writeValueAsString(model), contentasS1);
 
 	}
 

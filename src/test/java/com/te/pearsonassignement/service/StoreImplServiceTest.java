@@ -49,7 +49,7 @@ class StoreImplServiceTest {
 //		store.setOpenedDate(d);
 		List<Store>list=new ArrayList<>();
 		list.add(store);
-		assertEquals("15773203-9ce4-4ee1-9373-543b940fa293", service.getStores("city").get(0).getStoreId());
+		assertEquals("1525eec4-7bed-4597-bf5a-e06fcede5f4f", service.getStores("city").get(0).getStoreId());
 	}
 
 

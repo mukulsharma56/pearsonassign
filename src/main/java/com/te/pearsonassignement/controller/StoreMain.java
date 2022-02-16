@@ -2,8 +2,6 @@ package com.te.pearsonassignement.controller;
 
 import java.io.FileReader;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
 import com.opencsv.CSVReader;
 
 public class StoreMain {
@@ -13,9 +11,9 @@ public class StoreMain {
 	public static void readDataLineByLine(String file)
 	{
 
-		try {
-			FileReader filereader = new FileReader(file);
-			CSVReader csvReader = new CSVReader(filereader);
+		try(FileReader filereader = new FileReader(file);
+			CSVReader csvReader = new CSVReader(filereader);) {
+			
 			String[] nextRecord;
 			while ((nextRecord = csvReader.readNext()) != null) {
 				for (String cell : nextRecord) {
